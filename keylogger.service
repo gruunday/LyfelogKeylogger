@@ -1,0 +1,13 @@
+[Unit]
+Description=Lyfelog Keylogger
+After=network.target auditd.service
+
+[Service]
+User=gruunday
+Group=gruunday
+ExecStart=/usr/bin/python3 /usr/local/bin/keylogger &
+KillMode=process
+Type=simple
+
+[Install]
+WantedBy=multi-user.target

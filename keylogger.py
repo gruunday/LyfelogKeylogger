@@ -1,26 +1,34 @@
-#!/usr/bin/python3 env
+#!/usr/bin/python3
 
 import pyxhook
 import socket
 import time
 import sched
+import logging
+import datetime
+from pathlib import Path
+import requests
+import os
 
 
 class MetricFling:
   def __init__(self):
-    carbon_server = "51.77.58.219"
-    carbon_port = 2003
-    self.addr = (carbon_server, carbon_port)
     self.count = 0
-    self.sock = socket.socket()
-    connected = False
-    self.sock.connect(self.addr)
+    self.hostname = socket.gethostname()
+    os.environ["DISPLAY"] = ":1"
+
+
+  def get_headers(self):
+    with open('/etc/api.key', 'r') as f:
+      key = f.readline().strip('\n')
+      return {'x-api-key' : key, 'hostname' : self.hostname, 'metric': str(self.count), 'time': str(time.time())}
+
+  def report(self):
+    r = requests.post(f'https://lyfelog.skunkjunk.space/metric/', headers=self.get_headers())
 
   def fling(self, count):
-    metric = f'keylogger.starboard {self.count} {time.time()}\n'
-    #print(metric)
+    self.report()
     self.count = 0
-    self.sock.sendall(metric.encode('utf-8'))
     self.s.enter(10, 1, self.fling, (self.count,))
 
   def on_keypress(self, event):
@@ -32,7 +40,7 @@ class MetricFling:
       hm.HookKeyboard()
       hm.start()
 
-      # Every 60 Seconds report that minutes keys hit
+      # Every 10 Seconds report that minutes keys hit
       self.s = sched.scheduler(time.time, time.sleep)
       self.s.enter(10, 1, self.fling, (self.count,))
       self.s.run()
@@ -40,7 +48,3 @@ class MetricFling:
 if __name__ == '__main__':
     m = MetricFling()
     m.run()
-
-# If space is hit exit
-#  if event.Ascii == 32:
-#    exit(0)
