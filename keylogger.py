@@ -4,27 +4,22 @@ import pyxhook
 import socket
 import time
 import sched
-import logging
-import datetime
-from pathlib import Path
-import requests
 import os
+import datetime
+import getpass
 
 
-class MetricFling:
+class Keylogger:
   def __init__(self):
     self.count = 0
     self.hostname = socket.gethostname()
     os.environ["DISPLAY"] = ":1"
 
-
-  def get_headers(self):
-    with open('/etc/api.key', 'r') as f:
-      key = f.readline().strip('\n')
-      return {'x-api-key' : key, 'hostname' : self.hostname, 'metric': str(self.count), 'time': str(time.time())}
-
   def report(self):
-    r = requests.post(f'https://lyfelog.skunkjunk.space/metric/', headers=self.get_headers())
+    today = datetime.date.today()
+    filename = today.strftime('%Y%m%d')
+    with open(f'/home/{getpass.getuser()}/.keylogger/{filename}.log', 'a+') as f:
+      f.write(f'{self.hostname}, {self.count}, {time.time()}\n')
 
   def fling(self, count):
     self.report()
@@ -46,5 +41,5 @@ class MetricFling:
       self.s.run()
 
 if __name__ == '__main__':
-    m = MetricFling()
+    m = Keylogger()
     m.run()

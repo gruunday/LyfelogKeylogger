@@ -3,8 +3,8 @@ Description=Lyfelog Keylogger
 After=network.target auditd.service
 
 [Service]
-User=gruunday
-Group=gruunday
+User=
+Group=
 ExecStart=/usr/bin/python3 /usr/local/bin/keylogger &
 KillMode=process
 Type=simple
