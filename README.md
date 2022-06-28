@@ -1,24 +1,31 @@
 ## LyfeLog Keylogger
 
-Monitor keystrokes locally
+#### Monitor keystrokes locally
 
 **Note:** This doesn't record keys pressed, just the amount of keys pressed every interval
 
-Keystrokes are saved to /home/$USER/.keylogger/YEAR_MONTH_DAY.log
+Keystrokes are saved to `/home/$USER/.keylogger/YEAR_MONTH_DAY.log`
 
 
 ### Install
 
-**Needs make and pip3 installed**
+#### Dependencies
+
+* Needs make and pip3 installed
 
 ```bash
 apt install python3-pip make
 ```
 
+#### Build config files
+
 ```bash
 make build
 ```
 **Note:** Execute with your user, not sudo
+
+
+#### Install files
 
 ```bash
 sudo make install
